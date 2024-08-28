@@ -74,11 +74,9 @@ x-shared-env: &shared-api-worker-env
   OCI_ACCESS_KEY: ${OCI_ACCESS_KEY:-}
   OCI_SECRET_KEY: ${OCI_SECRET_KEY:-}
   OCI_REGION: ${OCI_REGION:-}
-  VECTOR_STORE: ${VECTOR_STORE:-weaviate}
-  WEAVIATE_ENDPOINT: ${WEAVIATE_ENDPOINT:-http://weaviate:8080}
-  WEAVIATE_API_KEY: ${WEAVIATE_API_KEY:-WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih}
-  QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
-  QDRANT_API_KEY: ${QDRANT_API_KEY:-difyai123456}
+  VECTOR_STORE: ${VECTOR_STORE:-qdrant} # Alterado para usar o Qdrant
+  QDRANT_URL: ${QDRANT_URL:-http://qdrant.neuralbase.com.br} # Alterado para URL externa
+  QDRANT_API_KEY: ${QDRANT_API_KEY:-hunted123} # API Key correta para o Qdrant
   QDRANT_CLIENT_TIMEOUT: ${QDRANT_CLIENT_TIMEOUT:-20}
   QDRANT_GRPC_ENABLED: ${QDRANT_GRPC_ENABLED:-false}
   QDRANT_GRPC_PORT: ${QDRANT_GRPC_PORT:-6334}
@@ -198,7 +196,6 @@ services:
       - default
 
   # worker service
-  # The Celery worker for processing the queue.
   worker:
     image: langgenius/dify-api:latest
     restart: always
@@ -300,29 +297,6 @@ services:
     depends_on:
       - api
       - web
-
-  # The Weaviate vector store.
-  weaviate:
-    image: semitechnologies/weaviate:latest
-    profiles:
-      - ""
-      - weaviate
-    restart: always
-    volumes:
-      # Mount the Weaviate data directory to the container.
-      - ./volumes/weaviate:/var/lib/weaviate
-    environment:
-      # The Weaviate configurations
-      PERSISTENCE_DATA_PATH: ${WEAVIATE_PERSISTENCE_DATA_PATH:-/var/lib/weaviate}
-      QUERY_DEFAULTS_LIMIT: ${WEAVIATE_QUERY_DEFAULTS_LIMIT:-25}
-      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: ${WEAVIATE_AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED:-false}
-      DEFAULT_VECTORIZER_MODULE: ${WEAVIATE_DEFAULT_VECTORIZER_MODULE:-none}
-      CLUSTER_HOSTNAME: ${WEAVIATE_CLUSTER_HOSTNAME:-node1}
-      AUTHENTICATION_APIKEY_ENABLED: ${WEAVIATE_AUTHENTICATION_APIKEY_ENABLED:-true}
-      AUTHENTICATION_APIKEY_ALLOWED_KEYS: ${WEAVIATE_AUTHENTICATION_APIKEY_ALLOWED_KEYS:-WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih}
-      AUTHENTICATION_APIKEY_USERS: ${WEAVIATE_AUTHENTICATION_APIKEY_USERS:-hello@dify.ai}
-      AUTHORIZATION_ADMINLIST_ENABLED: ${WEAVIATE_AUTHORIZATION_ADMINLIST_ENABLED:-true}
-      AUTHORIZATION_ADMINLIST_USERS: ${WEAVIATE_AUTHORIZATION_ADMINLIST_USERS:-hello@dify.ai}
 
   # Qdrant vector store.
   qdrant:
@@ -522,5 +496,3 @@ networks:
 
 volumes:
   oradata:
-
-   
