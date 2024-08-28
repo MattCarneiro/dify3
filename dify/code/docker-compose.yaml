@@ -304,7 +304,7 @@ services:
   # The Weaviate vector store.
   weaviate:
     image: semitechnologies/weaviate:latest
-        profiles:
+    profiles:
       - ""
       - weaviate
     restart: always
