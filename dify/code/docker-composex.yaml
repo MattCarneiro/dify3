@@ -74,9 +74,11 @@ x-shared-env: &shared-api-worker-env
   OCI_ACCESS_KEY: ${OCI_ACCESS_KEY:-}
   OCI_SECRET_KEY: ${OCI_SECRET_KEY:-}
   OCI_REGION: ${OCI_REGION:-}
-  VECTOR_STORE: ${VECTOR_STORE:-qdrant} # Alterado para usar o Qdrant
-  QDRANT_URL: ${QDRANT_URL:-http://qdrant.neuralbase.com.br} # Alterado para URL externa
-  QDRANT_API_KEY: ${QDRANT_API_KEY:-hunted123} # API Key correta para o Qdrant
+  VECTOR_STORE: ${VECTOR_STORE:-qdrant}
+  WEAVIATE_ENDPOINT: ${WEAVIATE_ENDPOINT:-}
+  WEAVIATE_API_KEY: ${WEAVIATE_API_KEY:-}
+  QDRANT_URL: ${QDRANT_URL:-http://qdrant.neuralbase.com.br}
+  QDRANT_API_KEY: ${QDRANT_API_KEY:-hunted123}
   QDRANT_CLIENT_TIMEOUT: ${QDRANT_CLIENT_TIMEOUT:-20}
   QDRANT_GRPC_ENABLED: ${QDRANT_GRPC_ENABLED:-false}
   QDRANT_GRPC_PORT: ${QDRANT_GRPC_PORT:-6334}
@@ -196,6 +198,7 @@ services:
       - default
 
   # worker service
+  # The Celery worker for processing the queue.
   worker:
     image: langgenius/dify-api:latest
     restart: always
@@ -297,17 +300,6 @@ services:
     depends_on:
       - api
       - web
-
-  # Qdrant vector store.
-  qdrant:
-    image: langgenius/qdrant:latest
-    profiles:
-      - qdrant
-    restart: always
-    volumes:
-      - ./volumes/qdrant:/qdrant/storage
-    environment:
-      QDRANT_API_KEY: ${QDRANT_API_KEY:-difyai123456}
 
   # The pgvector vector database.
   pgvector:
