@@ -9,7 +9,7 @@ version: "3.8"
 
 services:
   studio:
-    image: supabase/studio:20240701-05dfbec
+    image: supabase/studio:latest
     restart: unless-stopped
     healthcheck:
       test:
@@ -71,7 +71,7 @@ services:
       - ./volumes/api/kong.yml:/home/kong/temp.yml:ro
 
   auth:
-    image: supabase/gotrue:v2.151.0
+    image: supabase/gotrue:latest
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
@@ -206,7 +206,7 @@ services:
 
   # To use S3 backed storage: docker compose -f docker-compose.yml -f docker-compose.s3.yml up
   storage:
-    image: supabase/storage-api:v1.0.6
+    image: supabase/storage-api:latest
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
@@ -263,7 +263,7 @@ services:
       - ./volumes/storage:/var/lib/storage:z
 
   meta:
-    image: supabase/postgres-meta:v0.83.2
+    image: supabase/postgres-meta:latest
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
@@ -280,7 +280,7 @@ services:
       PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
 
   functions:
-    image: supabase/edge-runtime:v1.55.0
+    image: supabase/edge-runtime:latest
     restart: unless-stopped
     depends_on:
       analytics:
@@ -341,7 +341,7 @@ services:
 
   # Comment out everything below this point if you are using an external Postgres database
   db:
-    image: supabase/postgres:15.1.1.61
+    image: supabase/postgres:latest
     healthcheck:
       test: pg_isready -U postgres -h localhost
       interval: 5s
